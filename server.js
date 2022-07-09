@@ -4,7 +4,13 @@ const app = express()
 import dotenv from "dotenv"
 dotenv.config()
 
+//db and authenticateUser
 import connectDB from "./db/connect.js"
+
+
+//routers
+import authRouter from "./routes/authRoutes.js"
+import jobRouter from "./routes/jobsRoutes.js"
 
 const port = process.env.PORT || 5000
 
@@ -12,9 +18,10 @@ const port = process.env.PORT || 5000
 import errorHandlerMiddleware from "./middleware/error-handler.js"
 import notFoundMiddleware from "./middleware/not-found.js"
 
-app.get("/", (req, res) => {
-    res.send("welcome")
-})
+app.use(express.json())
+
+app.use("/api/v1/auth", authRouter)
+app.use("/api/v1/jobs", jobRouter)
 
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)
