@@ -1,63 +1,99 @@
-import { useState, useEffect } from "react"
-import { Alert, FormRow, Logo } from "../components"
-import Wrapper from "../assets/wrappers/RegisterPage"
-import { useAppContext } from "../context/appContext"
+import { useState, useEffect } from "react";
+import { Alert, FormRow, Logo } from "../components";
+import Wrapper from "../assets/wrappers/RegisterPage";
+import { useAppContext } from "../context/appContext";
+import { useNavigate } from "react-router-dom";
 
 const initialState = {
-    name: "",
-    email: "",
-    password: "",
-    isMember: true,
-}
+  name: "",
+  email: "",
+  password: "",
+  isMember: true,
+};
 
 const Register = () => {
-    const [values, setValues] = useState(initialState)
+  const navigate = useNavigate();
+  const [values, setValues] = useState(initialState);
+  const { user, isLoading, showAlert, displayAlert, registerUser } =
+    useAppContext();
 
-    //global state and useNavigate
+  const toggleMember = () => {
+    setValues({ ...values, isMember: !values.isMember });
+  };
 
-    const { isLoading, showAlert, displayAlert } = useAppContext()
+  const handleChange = (e) => {
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
 
-    const toggleMember = () => {
-        setValues({ ...values, isMember: !values.isMember })
+  const onSubmit = (e) => {
+    e.preventDefault();
+    const { name, email, password, isMember } = values;
+
+    if (!email || !password || (!isMember && !name)) {
+      displayAlert();
+      return;
     }
 
-    const handleChange = (e) => {
-        setValues({ ...values, [e.target.name]: e.target.value })
+    const currentUser = { name, email, password };
+
+    if (isMember) {
+      console.log("login");
+    } else {
+      registerUser(currentUser);
     }
 
-    const onSubmit = (e) => {
-        e.preventDefault()
-        const { name, email, password, isMember } = values
+    console.log(values);
+  };
 
-        if (!email || !password || (!isMember && !name)) {
-            displayAlert()
-        }
-
-        console.log(values)
+  useEffect(() => {
+    if (user) {
+      setTimeout(() => {
+        navigate("/");
+      }, 3000);
     }
+  }, [user, navigate]);
 
-    return (
-        <Wrapper className="full-page">
-            <form className="form" onSubmit={onSubmit}>
-                <Logo />
-                <h3>{values.isMember ? "Login" : "Register"}</h3>
+  return (
+    <Wrapper className="full-page">
+      <form className="form" onSubmit={onSubmit}>
+        <Logo />
+        <h3>{values.isMember ? "Login" : "Register"}</h3>
 
-                {showAlert && <Alert />}
+        {showAlert && <Alert />}
 
-                {!values.isMember && <FormRow type="text" name="name" value={values.name} handleChange={handleChange} />}
-                <FormRow type="email" name="email" value={values.email} handleChange={handleChange} />
-                <FormRow type="password" name="password" value={values.password} handleChange={handleChange} />
+        {!values.isMember && (
+          <FormRow
+            type="text"
+            name="name"
+            value={values.name}
+            handleChange={handleChange}
+          />
+        )}
+        <FormRow
+          type="email"
+          name="email"
+          value={values.email}
+          handleChange={handleChange}
+        />
+        <FormRow
+          type="password"
+          name="password"
+          value={values.password}
+          handleChange={handleChange}
+        />
 
-                <button type="submit" className="btn btn-block">submit</button>
-                <p>
-                    {values.isMember ? "Not a member yet?" : "Already a member?"}
-                    <button className="member-btn" type="button" onClick={toggleMember}>{
-                        values.isMember ? "Register" : "Login"
-                    }</button>
-                </p>
-            </form>
-        </Wrapper>
-    )
-}
+        <button type="submit" className="btn btn-block" disabled={isLoading}>
+          submit
+        </button>
+        <p>
+          {values.isMember ? "Not a member yet?" : "Already a member?"}
+          <button className="member-btn" type="button" onClick={toggleMember}>
+            {values.isMember ? "Register" : "Login"}
+          </button>
+        </p>
+      </form>
+    </Wrapper>
+  );
+};
 
-export default Register
+export default Register;
