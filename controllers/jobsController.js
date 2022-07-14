@@ -1,22 +1,35 @@
+import Job from "../models/Job.js";
+import { StatusCodes } from "http-status-codes";
+import { BadRequestError } from "../errors/index.js";
+
 const createJob = async (req, res) => {
-    res.send("createJob")
-}
+  const { position, company } = req.body;
+
+  if (!position || !company) {
+    throw new BadRequestError("Please Provide All Values");
+  }
+
+  req.body.createdBy = req.user.userId;
+
+  const job = await Job.create(req.body);
+
+  res.status(StatusCodes.CREATED).json({ job });
+};
 
 const getAllJobs = async (req, res) => {
-    res.send("getAllJObs")
-}
+  res.send("getAllJObs");
+};
 
 const updateJob = async (req, res) => {
-    res.send("updateJob")
-}
+  res.send("updateJob");
+};
 
 const deleteJob = async (req, res) => {
-    res.send("deleteJob")
-}
+  res.send("deleteJob");
+};
 
 const showStats = async (req, res) => {
-    res.send("showStats")
-}
+  res.send("showStats");
+};
 
-
-export { createJob, getAllJobs, deleteJob, showStats, updateJob }
+export { createJob, getAllJobs, deleteJob, showStats, updateJob };
