@@ -4,5 +4,14 @@ import Alert from "./Alert";
 import Navbar from "./Navbar";
 import BigSidebar from "./BigSidebar";
 import SmallSidebar from "./SmallSidebar";
+import FormRowSelect from "./FormRowSelect";
 
-export { Logo, FormRow, Alert, SmallSidebar, Navbar, BigSidebar };
+export {
+  FormRowSelect,
+  Logo,
+  FormRow,
+  Alert,
+  SmallSidebar,
+  Navbar,
+  BigSidebar,
+};
