@@ -19,9 +19,15 @@ import {
   CREATE_JOB_BEGIN,
   CREATE_JOB_SUCCESS,
   CREATE_JOB_ERROR,
+  GET_JOBS_BEGIN,
+  GET_JOBS_SUCCESS,
 } from "./actions";
 
 const initialState = {
+  jobs: [],
+  totalJobs: 0,
+  numOfPages: 1,
+  page: 1,
   isLoading: false,
   showAlert: false,
   alertText: "",
@@ -207,10 +213,43 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  const getJobs = async () => {
+    let url = `/jobs`;
+
+    dispatch({ type: GET_JOBS_BEGIN });
+    try {
+      const { data } = await authFetch(url);
+      const { jobs, totalJobs, numOfPages } = data;
+      dispatch({
+        type: GET_JOBS_SUCCESS,
+        payload: {
+          jobs,
+          totalJobs,
+          numOfPages,
+        },
+      });
+    } catch (error) {
+      console.log(error.response);
+      logoutUser();
+    }
+    clearAlert();
+  };
+
+  const setEditJob = (id) => {
+    console.log(`set edit job : ${id}`);
+  };
+
+  const deleteJob = (id) => {
+    console.log(`delete : ${id}`);
+  };
+
   return (
     <AppContext.Provider
       value={{
         ...state,
+        setEditJob,
+        deleteJob,
+        getJobs,
         createJob,
         updateUser,
         setupUser,
