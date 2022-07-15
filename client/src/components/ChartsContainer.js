@@ -1,7 +1,14 @@
-import React from "react";
+import BarChart from "./BarChart";
+import { useAppContext } from "../context/appContext";
+import Wrapper from "../assets/wrappers/ChartsContainer";
 
-const ChartsContainer = () => {
-  return <div>ChartsContainer</div>;
-};
+export default function ChartsContainer() {
+  const { monthlyApplications: data } = useAppContext();
 
-export default ChartsContainer;
+  return (
+    <Wrapper>
+      <h4>Monthly Applications</h4>
+      <BarChart data={data} />
+    </Wrapper>
+  );
+}
