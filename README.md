@@ -15,6 +15,14 @@ Tech used:
 - React router@6
 - JWT
 
+###
+
+You will need .env file inside it;
+
+MONGO_URL=yourconnection
+JWT_SECRET=makethisonereaaallysecret
+JWT_LIFETIME=sometime
+
 ## Get started
 
 Install the dependencies...
