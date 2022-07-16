@@ -23,6 +23,7 @@ import {
   EDIT_JOB_BEGIN,
   SHOW_STATS_BEGIN,
   SHOW_STATS_SUCCESS,
+  CLEAR_FILTERS,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -214,12 +215,23 @@ const reducer = (state, action) => {
   if (action.type === SHOW_STATS_BEGIN) {
     return { ...state, isLoading: true, showAlert: false };
   }
+
   if (action.type === SHOW_STATS_SUCCESS) {
     return {
       ...state,
       isLoading: false,
       stats: action.payload.stats,
       monthlyApplications: action.payload.monthlyApplications,
+    };
+  }
+
+  if (action.type === CLEAR_FILTERS) {
+    return {
+      ...state,
+      search: "",
+      searchStatus: "all",
+      searchType: "all",
+      sort: "latest",
     };
   }
 

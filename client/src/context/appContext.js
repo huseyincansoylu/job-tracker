@@ -28,6 +28,7 @@ import {
   EDIT_JOB_ERROR,
   SHOW_STATS_BEGIN,
   SHOW_STATS_SUCCESS,
+  CLEAR_FILTERS,
 } from "./actions";
 
 const initialState = {
@@ -54,6 +55,11 @@ const initialState = {
   status: "pending",
   stats: {},
   monthlyApplications: [],
+  search: "",
+  searchStatus: "all",
+  searchType: "all",
+  sort: "latest",
+  sortOptions: ["latest", "oldest", "a-z", "z-a"],
 };
 
 const AppContext = React.createContext();
@@ -113,8 +119,6 @@ const AppProvider = ({ children }) => {
       );
 
       const { user, token, location } = data;
-
-      console.log("11", alertText);
 
       dispatch({
         type: SETUP_USER_SUCCESS,
@@ -223,8 +227,12 @@ const AppProvider = ({ children }) => {
   };
 
   const getJobs = async () => {
-    let url = `/jobs`;
-
+    // will add page later
+    const { search, searchStatus, searchType, sort } = state;
+    let url = `/jobs?status=${searchStatus}&jobType=${searchType}&sort=${sort}`;
+    if (search) {
+      url = url + `&search=${search}`;
+    }
     dispatch({ type: GET_JOBS_BEGIN });
     try {
       const { data } = await authFetch(url);
@@ -238,8 +246,7 @@ const AppProvider = ({ children }) => {
         },
       });
     } catch (error) {
-      console.log(error.response);
-      logoutUser();
+      // logoutUser()
     }
     clearAlert();
   };
@@ -304,10 +311,15 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  const clearFilters = () => {
+    dispatch({ type: CLEAR_FILTERS });
+  };
+
   return (
     <AppContext.Provider
       value={{
         ...state,
+        clearFilters,
         showStats,
         setEditJob,
         deleteJob,
