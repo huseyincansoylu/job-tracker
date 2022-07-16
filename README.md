@@ -10,8 +10,10 @@ Tech used:
 - NodeJs
 - Express
 - MongoDB
+- Mongoose
 - Styled Components
 - React router@6
+- JWT
 
 ## Get started
 
